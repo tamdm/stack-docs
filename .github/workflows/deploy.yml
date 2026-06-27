@@ -1,0 +1,36 @@
+name: Auto Deploy Stack Docs to Debian 13
+
+# Kích hoạt khi có hành động push vào nhánh main hoặc sửa trực tiếp trên Web GitHub
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository Code
+        uses: actions/checkout@v4
+
+      - name: Executing Remote SSH Commands to Deploy
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: 2222 # Sử dụng đúng port SSH 2222 hiện tại của anh
+          script: |
+            echo "==== Bắt đầu quá trình đồng bộ code ===="
+            cd /opt/github/stack-docs
+            
+            # Reset các thay đổi cục bộ (nếu có) và kéo code mới nhất về
+            git fetch --all
+            git reset --hard origin/main
+            
+            echo "==== Kích hoạt container MkDocs biên dịch dữ liệu ===="
+            cd /opt/docker/caddy
+            docker compose run --rm mkdocs
+            
+            echo "==== Deploy hoàn tất! ===="
