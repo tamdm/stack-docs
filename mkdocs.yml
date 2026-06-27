@@ -1,1 +1,5 @@
+site_name: "Stack Docs"  # Tên tiêu đề trang web (Bắt buộc phải có)
+site_url: "https://stack.io.vn"
 
+theme:
+  name: material  # Sử dụng theme material
