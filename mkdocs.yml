@@ -3,3 +3,5 @@ site_url: "https://stack.io.vn"
 
 theme:
   name: material  # Sử dụng theme material
+  features:
+    - info.dismiss
